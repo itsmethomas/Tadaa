@@ -13,18 +13,13 @@ module.exports = {
 			type: 'string',
 			required: true
 		},
-		invitedId: {
+		friendId: {
 			type: 'string',
 			required: true,
 		},
-		circleNumber: {
-			type: 'int',
-			required:true,
-		},
-		satus: {
+		status: {
 			type: 'string',
 			required:true,
 		}
 	}
 };
-

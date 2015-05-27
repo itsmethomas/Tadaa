@@ -8,6 +8,7 @@
 module.exports = {
 	login: function (req, res) {
 		//console.log(User.create(req.body).done);
+		console.log(req.body);
 		var fbId = req.body.fbId;
 		var findQuery = '{"fbId":"' + fbId + '"}';
 
@@ -15,6 +16,13 @@ module.exports = {
 		var getUserPhotos = function () {
 			UserPhotos.find({"userId":userInfo.id}, function(err, photos) {
 				userInfo.photos = photos;
+				getUserStatus();
+			});
+		}
+
+		var getUserStatus = function () {
+			UserCircle.find({$or:[{ownerId:userInfo.id}, {friendId:userInfo.id}]}, function(err, circles) {
+				userInfo.circles = circles;
 				res.end(JSON.stringify(userInfo));
 			});
 		}
@@ -22,6 +30,11 @@ module.exports = {
 		User.find ({"fbId":fbId}, function(err, users) {
 			if (users.length > 0) {
 				userInfo = users[0];
+
+				var ageDifMs = Date.now() - userInfo.birthDate.getTime();
+				var ageDate = new Date(ageDifMs); // miliseconds from epoch
+				userInfo.age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
 				getUserPhotos();
 			} else {
 				User.create(req.body, function(err, user) {
@@ -32,9 +45,18 @@ module.exports = {
 			}
 		});
 	  },
+	fetchUserProfile: function (req, res) {
+		  var userId = req.param('userId');
+		  User.find ({"id":userId}, function(err, users) {
+			if (users.length > 0) {
+				res.end(JSON.stringify({success:"YES", userinfo:users[0]}));
+			} else {
+				res.end(JSON.stringify({success:"User does not exist."}));
+			}
+		});
+	  },
 	photos: function (req, res) {
-		  var reqJSON = req.body;
-		  var userId = reqJSON.userId;
+		  var userId = req.param('userId');
 
 		  UserPhotos.find({"userId":userId}, function(err, photos) {
 			  if (err == null)

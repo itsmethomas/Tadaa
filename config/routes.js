@@ -54,7 +54,7 @@ module.exports.routes = {
     controller    : 'User',
     action        : 'explore'
   },
-  'post /user': {
+  'get /user': {
     controller    : 'User',
     action        : 'photos'
   },
@@ -65,5 +65,22 @@ module.exports.routes = {
   'post /user': {
     controller    : 'User',
     action        : 'updateVideo'
+  },
+  'get /user': {
+    controller    : 'User',
+    action        : 'fetchUserProfile'
+  },
+  'post /circle/create': {
+    controller    : 'UserCircle',
+    action        : 'createCircle'
+  },
+  'get /circle/circles': {
+    controller    : 'UserCircle',
+    action        : 'myCircles'
+  },
+  'post /circle/updateStatus': {
+    controller    : 'UserCircle',
+    action        : 'updateCircleStatus'
   }
+
 };
